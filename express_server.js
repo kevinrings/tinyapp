@@ -9,6 +9,43 @@ const urlDatabase = {
   "9sm5xK": "http://www.google.com"
 };
 
+app.use(express.urlencoded({ extended: true }));
+
+// app.post("/urls", (req, res) => {
+//   console.log(req.body); // Log the POST request body to the console
+//   res.send("Ok"); // Respond with 'Ok' (we will replace this)
+// });
+
+function generateRandomString() {
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  let randomString = '';
+  const length = 6;
+
+  for (let i = 0; i < length; i++) {
+    const randomIndex = Math.floor(Math.random() * characters.length);
+    const randomChar = characters[randomIndex];
+    randomString += randomChar;
+  }
+
+  return randomString;
+}
+
+app.post('/urls', (req, res) => {
+  const shortURLId = generateRandomString();
+  const longURL = req.body.longURL;
+
+  // Store the shortURLId and longURL in the database (e.g., urlDatabase)
+  urlDatabase[shortURLId] = longURL;
+  console.log(req.body); // Log the POST request body to the console
+  console.log(urlDatabase); // Log the updated urlDatabase to the console
+  res.status(200).send('Short URL created successfully');
+});
+
+app.get("/u/:id", (req, res) => {
+  // const longURL = ...
+  res.redirect(longURL);
+});
+
 app.get("/", (req, res) => {
   res.send("Hello!");
 });
@@ -29,7 +66,12 @@ app.get("/urls", (req, res) => {
   res.render("urls_index", templateVars);
 });
 
+app.get("/urls/new", (req, res) => {
+  res.render("urls_new");
+});
+
 app.get("/urls/:id", (req, res) => {
   const templateVars = { id: req.params.id, longURL: urlDatabase[req.params.id] /* What goes here? */ };
   res.render("urls_show", templateVars);
 });
+
