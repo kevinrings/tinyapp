@@ -54,6 +54,13 @@ app.post("/urls/:id/delete", (req, res) => {
   res.redirect("/urls");
 });
 
+app.post("/urls/:id", (req, res) => {
+  const shortURL = req.params.id;
+  const newLongURL = req.body.longURL;
+  urlDatabase[shortURL] = newLongURL;
+  res.redirect("/urls");
+});
+
 app.get("/", (req, res) => {
   res.send("Hello!");
 });
